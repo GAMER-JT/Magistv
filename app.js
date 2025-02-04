@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmPaymentBtn.disabled = true;
     
     // Simulate payment verification
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 4000));
 
     // Close modal and reset form
     paymentModal.classList.remove('active');
@@ -200,16 +200,25 @@ document.addEventListener('DOMContentLoaded', () => {
     startConfetti();
     showSuccessMessage();
 
-    // Start download after delay
-    setTimeout(() => {
-      const fakeDownloadLink = document.createElement('a');
-      fakeDownloadLink.href = '#';
-      fakeDownloadLink.download = 'NexusFlow.apk';
-      fakeDownloadLink.click();
-      
-      showDownloadStartedMessage();
-    }, 1500);
-  });
+     document.querySelectorAll('.btn-primary').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault(); // Evita la navegación
+
+            const downloadUrl = this.getAttribute('data-url'); // Obtiene la URL del botón
+            const downloadFileName = downloadUrl.split('/').pop(); // Extrae el nombre del archivo
+
+            setTimeout(() => {
+                const fakeDownloadLink = document.createElement('a');
+                fakeDownloadLink.href = downloadUrl;
+                fakeDownloadLink.download = downloadFileName;
+                document.body.appendChild(fakeDownloadLink);
+                fakeDownloadLink.click();
+                document.body.removeChild(fakeDownloadLink);
+
+                alert("La descarga ha comenzado.");
+            }, 1500);
+        });
+    });
 
   function startConfetti() {
     const duration = 4000;
